@@ -2,7 +2,7 @@ from pathlib import Path
 import torch
 
 DEFAULT_MODEL_PATH = Path("/content/drive/MyDrive/pytorch_models")
-
+DEFAULT_DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def save_model(model, model_name, save_dir=None):
     """
@@ -28,7 +28,7 @@ def save_model(model, model_name, save_dir=None):
     return save_path
 
 
-def load_model(model, model_name, save_dir=None, device="cpu"):
+def load_model(model, model_name, save_dir=None, device=None):
     """
     Load a PyTorch model.
 
@@ -44,6 +44,8 @@ def load_model(model, model_name, save_dir=None, device="cpu"):
     save_dir = Path(save_dir) if save_dir else DEFAULT_MODEL_PATH
 
     load_path = save_dir / model_name
+
+    device = device if device else DEFAULT_DEVICE
 
     model.load_state_dict(
         torch.load(load_path, map_location=device)
